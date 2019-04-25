@@ -5,6 +5,7 @@ class Node:
         self.solution = solution
         self.last = None
         self.size = len(self.board)
+        self.cost = -1
 
     # troca as duas casas indicadas
     def switch(self, piece):
@@ -26,17 +27,17 @@ class Node:
 
     # verifica se o jogo ja terminou
     def isOk(self):
-        posit = 1
-        for i in range(self.size):
-            for j in range(self.size):
-                if i == self.size - 1 & j == self.size - 1:
-                    if self.board[i][j] != 0:
+        expected = 1
+        for line in self.board:
+            for item in line:
+                if expected == 9:
+                    if item != 0:
                         return False
                     else:
                         return True
-                if self.board[i][j] != posit:
+                if item != expected:
                     return False
-                posit = posit + 1
+                expected = expected + 1
 
     # busca quais sao as opcoes de movimento
     def possibleActions(self):
@@ -101,12 +102,12 @@ class Node:
     def numberOfWrongPieces(self):
         wrongPieces = 0
         expected = 1
-        for i in range(self.size):
-            for j in range(self.size):
-                if i == self.size and j == self.size:
-                    if self.board[i][j] != 0:
+        for line in self.board:
+            for item in line:
+                if expected == 9:
+                    if item != 0:
                         wrongPieces = wrongPieces + 1
-                elif self.board[i][j] != expected:
+                elif item != expected:
                     wrongPieces = wrongPieces + 1
                 expected = expected + 1
 

@@ -1,6 +1,7 @@
 from copy import deepcopy
 from Node import Node
 import time
+import testBoards
 
 # busca em largura
 def breadth_first_search(node):
@@ -111,16 +112,40 @@ def a_star_search(node):
     pass
 
 
-# busca gulosa
+# busca gulosa com heuristica
 def greedy_best_first_search(node):
     frontier = []
+    explored = []
+    n = node
+    index = -1
     while True:
-        for action in node.possibleActions()
+        explored.append(n.board)
+        if n.isOk():
+            print("Solucao encontrada - ", n.solution)
+            return n
+
+        for action in n.possibleActions():
+            child = Node(deepcopy(n.board), n.empty, n.solution + 1)
+            child.switch(action)
+            child.last = node
+            if child.board not in explored:
+                frontier.append(child)
+
+            if child.isOk():
+                print("solucao encontrada - ", child.solution)
+                return child
+
         lowest = -1
-        for item in frontier:
-            cost = item.numberOfWrongPieces()
-            if lowest == -1 or cost < lowest:
-                lowest = cost
+        for i in range(len(frontier)):
+            if frontier[i].cost == -1:
+                frontier[i].cost = frontier[i].numberOfWrongPieces()
+
+            if (lowest == -1 or frontier[i].cost <= lowest) and frontier[i].board not in explored:
+                lowest = frontier[i].cost
+                n = frontier[i]
+                index = i
+
+        frontier.pop(index)
 
 
 # busca hill climbing
@@ -161,17 +186,14 @@ def initialize():
 
 def main():
     #node = initialize()
-    # teste 2
-    #node = Node([[1, 2, 3], [4, 0, 5], [7, 8, 6]], (1, 1), 0)
-    # teste 7
-    #node = Node([[1, 5, 2], [4, 8, 0], [7, 6, 3]], (1, 2), 0)
-    # teste 31
-    node = Node([[8, 7, 6], [2, 5, 4], [3, 0, 1]], (2, 1), 0)
-
+    board, empty = testBoards.get(7)
+    node = Node(board, empty, 0)
+    
+    node.show()
 
     tipo = input(
         "Escolha qual jogador deseja testar:"
-        "\n1- BFS\n2- DFS\n3- Uniform Cost\n4- A estrela\n5- Greedy Best\n6- Hill Climbing\n"
+        "\n1- BFS\n2- IDS\n3- Uniform Cost\n4- A estrela\n5- Greedy Best\n6- Hill Climbing\n"
     )
     tipo = int(tipo)
 
@@ -184,22 +206,23 @@ def main():
             print("Comecando o BFS ...")
             breadth_first_search(node)
         elif tipo == 2:
-            print("Comecando o DFS ...")
+            print("Comecando o IDS ...")
             iterative_deepening_search(node)
         elif tipo == 3:
-            print("Comecando o uniform cost")
+            print("Comecando o uniform cost ...")
             uniform_cost_search(node)
         elif tipo == 4:
-            print("Comecando o A estrela")
+            print("Comecando o A estrela ...")
             a_star_search(node)
         elif tipo == 5:
-            print("Comecando o greedy best")
+            print("Comecando o greedy best ...")
             greedy_best_first_search(node)
         elif tipo == 6:
-            print("Comecando o hill climbing")
+            print("Comecando o hill climbing ...")
             hill_climbing_search(node)
         end = time.time()
         print("Execucao em - ", end-start)
+
 
 if __name__ == '__main__':
     main()
