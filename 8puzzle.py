@@ -164,19 +164,26 @@ def alreadyContains(list, node):
 # inicializa o jogo e cria o tabuleiro inicial
 def initialize():
     print("Bem vindo ao N-Puzzle!")
-    n = input("Qual o tamanho desejado? ( tamanho x tamanho ): ")
-    size = int(n)
+    tipo = input("1) Tabuleiro existente\n2) Digitar novo jogo\n")
     board = []
     empty = None
-    for i in range(size):
-        line = input("Digite as casas da linha "
-                     + str(i + 1) + " ( separando com ' ' e coloque um 0 onde nao ha ): ")
-        line = str.split(line, " ")
-        for j in range(size):
-            line[j] = int(line[j])
-            if line[j] == 0:
-                empty = (i, j)
-        board.append(line)
+
+    if tipo == "2":
+        n = input("Qual o tamanho desejado? ( tamanho x tamanho ): ")
+        size = int(n)
+        for i in range(size):
+            line = input("Digite as casas da linha "
+                         + str(i + 1) + " ( separando com ' ' e coloque um 0 onde nao ha ): ")
+            line = str.split(line, " ")
+            for j in range(size):
+                line[j] = int(line[j])
+                if line[j] == 0:
+                    empty = (i, j)
+            board.append(line)
+
+    if tipo == "1":
+        n = input("Numero do tabuleiro: ")
+        board, empty = testBoards.get(int(n))
 
     node = Node(board, empty, 0)
     print("Tabuleiro: ")
@@ -185,11 +192,7 @@ def initialize():
 
 
 def main():
-    #node = initialize()
-    board, empty = testBoards.get(7)
-    node = Node(board, empty, 0)
-    
-    node.show()
+    node = initialize()
 
     tipo = input(
         "Escolha qual jogador deseja testar:"
