@@ -43,7 +43,7 @@ def iterative_deepening_search(node):
         depth = depth + 1
 
 
-# busca em profundidade
+# busca em profundidade limitada
 def depth_first_search(limit, node):
     if node.isOk():
         return node.solution
@@ -107,9 +107,42 @@ def uniform_cost_search(node):
                 frontier.append(child)
 
 
-# busca a estrela
+# busca A*
 def a_star_search(node):
-    pass
+    frontier = []
+    explored = []
+    n = node
+    index = -1
+    while True:
+        explored.append(n.board)
+        if n.isOk():
+            print("Solucao encontrada - ", n.solution)
+            return n
+
+        for action in n.possibleActions():
+            child = Node(deepcopy(n.board), n.empty, n.solution + 1)
+            child.switch(action)
+            child.last = node
+            if child.board not in explored:
+                frontier.append(child)
+
+            if child.isOk():
+                print("solucao encontrada - ", child.solution)
+                return child
+
+        lowest = -1
+        for i in range(len(frontier)):
+            if frontier[i].cost == -1:
+                frontier[i].cost = frontier[i].numberOfWrongPieces()
+            else:
+                frontier[i].cost = frontier[i].numberOfWrongPieces() + frontier[i].cost
+
+            if (lowest == -1 or frontier[i].cost <= lowest) and frontier[i].board not in explored:
+                lowest = frontier[i].cost
+                n = frontier[i]
+                index = i
+
+        frontier.pop(index)
 
 
 # busca gulosa com heuristica
@@ -150,7 +183,14 @@ def greedy_best_first_search(node):
 
 # busca hill climbing
 def hill_climbing_search(node):
-    pass
+    explored = []
+    frontier = []
+
+    while True:
+        if node.isOk():
+            return node
+        
+
 
 
 # checa se o elemento ja esta contido na lista

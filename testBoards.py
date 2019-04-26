@@ -8,23 +8,23 @@ def get(number):
     if number == 2:
         return [[1, 2, 3], [4, 0, 5], [7, 8, 6]], (1, 1)
     if number == 3:
-        return [[], [], []], ()
+        return [[1, 0, 3], [4, 2, 5], [7, 8, 6]], (0, 1)
     if number == 4:
-        return [[], [], []], ()
+        return [[1, 5, 2], [4, 0, 3], [7, 8, 6]], (1, 1)
     if number == 5:
-        return [[], [], []], ()
+        return [[1, 5, 2], [0, 4, 3], [7, 8, 6]], (1, 0)
     if number == 6:
-        return [[], [], []], ()
+        return [[1, 5, 2], [4, 8, 3], [7, 6, 0]], (2, 2)
     if number == 7:
         return [[1, 5, 2], [4, 8, 0], [7, 6, 3]], (1, 2)
     if number == 8:
-        return [[], [], []], ()
+        return [[0, 5, 2], [1, 8, 3], [4, 7, 6]], (0, 0)
     if number == 9:
-        return [[], [], []], ()
+        return [[1, 0, 2], [8, 5, 3], [4, 7, 6]], (0, 1)
     if number == 10:
-        return [[], [], []], ()
+        return [[5, 8, 2], [1, 0, 3], [4, 7, 6]], (1, 1)
     if number == 11:
-        return [[], [], []], ()
+        return [[5, 8, 2], [1, 7, 3], [4, 0, 6]], (2, 1)
     if number == 12:
         return [[], [], []], ()
     if number == 13:
