@@ -122,7 +122,7 @@ def a_star_search(node):
         for action in n.possibleActions():
             child = Node(deepcopy(n.board), n.empty, n.solution + 1)
             child.switch(action)
-            child.last = node
+            child.last = n
             if child.board not in explored:
                 frontier.append(child)
 
@@ -160,7 +160,7 @@ def greedy_best_first_search(node):
         for action in n.possibleActions():
             child = Node(deepcopy(n.board), n.empty, n.solution + 1)
             child.switch(action)
-            child.last = node
+            child.last = n
             if child.board not in explored:
                 frontier.append(child)
 
@@ -184,13 +184,42 @@ def greedy_best_first_search(node):
 # busca hill climbing
 def hill_climbing_search(node):
     explored = []
-    frontier = []
-
+    node.cost = node.numberOfWrongPieces()
     while True:
+        explored.append(node.board)
         if node.isOk():
+            print("Solucao encontrada", node.solution)
             return node
-        
 
+        frontier = []
+        newnode = None
+        lowest = node.cost
+        for action in node.possibleActions():
+            child = Node(deepcopy(node.board), node.empty, node.solution + 1)
+            child.switch(action)
+            child.last = node
+            child.cost = child.numberOfWrongPieces()
+
+            if child.board not in explored:
+                frontier.append(child)
+                if child.cost <= lowest:
+                    lowest = child.cost
+                    newnode = child
+
+        if not newnode:
+            if len(frontier) > 0:
+                lowest = frontier[0].cost
+                newnode = frontier[0]
+                for child in frontier:
+                    if child.cost < lowest:
+                        lowest = child.cost
+                        newnode = child
+
+        if not newnode:
+            print("Travei")
+            return None
+
+        node = newnode
 
 
 # checa se o elemento ja esta contido na lista
