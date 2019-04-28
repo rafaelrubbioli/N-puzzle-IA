@@ -7,14 +7,15 @@ import testBoards
 def breadth_first_search(node):
     frontier = [node]
     explored = []
-
+    expanded = 0
     while True:
         if len(frontier) == 0:
             print("Nao encontrou resultado")
             return False
 
         node = frontier.pop(0)
-        explored.append(node)
+        expanded = expanded + 1
+        explored.append(node.toString())
         possibleActions = node.possibleActions()
 
         for action in possibleActions:
@@ -23,10 +24,11 @@ def breadth_first_search(node):
             child.last = node
 
             if child.isOk():
-                print("Solucao encontrada - ", child.solution + 1)
+                print("Solucao encontrada: ", child.solution + 1,
+                      "\nNos expandidos: ", expanded)
                 return True
 
-            if not alreadyContains(explored, child) and not alreadyContains(frontier, child):
+            if child.toString() not in explored and child not in frontier:
                 child.solution = child.solution + 1
                 frontier.append(child)
 
@@ -76,7 +78,7 @@ def depth_first_search(limit, node):
 def uniform_cost_search(node):
     frontier = [node]
     explored = []
-
+    expanded = 0
     while True:
         if len(frontier) == 0:
             print("Nao encontrou resultado")
@@ -90,7 +92,8 @@ def uniform_cost_search(node):
                 position = i
 
         node = frontier.pop(position)
-        explored.append(node)
+        expanded = expanded + 1
+        explored.append(node.toString())
         possibleActions = node.possibleActions()
 
         for action in possibleActions:
@@ -99,10 +102,11 @@ def uniform_cost_search(node):
             child.last = node
 
             if child.isOk():
-                print("Solucao encontrada - ", child.solution + 1)
+                print("Solucao encontrada: ", child.solution + 1,
+                      "\nNos expandidos: ", expanded)
                 return True
 
-            if not alreadyContains(explored, child) and not alreadyContains(frontier, child):
+            if child.toString() not in explored and child not in frontier:
                 child.solution = child.solution + 1
                 frontier.append(child)
 
@@ -113,22 +117,20 @@ def a_star_search(node):
     explored = []
     n = node
     index = -1
+    expanded = 0
     while True:
-        explored.append(n.board)
+        explored.append(n.toString())
         if n.isOk():
-            print("Solucao encontrada - ", n.solution)
+            print("Solucao encontrada - ", n.solution,
+                  "\nNos expandidos: ", expanded)
             return n
 
         for action in n.possibleActions():
             child = Node(deepcopy(n.board), n.empty, n.solution + 1)
             child.switch(action)
             child.last = n
-            if child.board not in explored:
+            if child.toString() not in explored:
                 frontier.append(child)
-
-            if child.isOk():
-                print("solucao encontrada - ", child.solution)
-                return child
 
         lowest = -1
         for i in range(len(frontier)):
@@ -143,6 +145,7 @@ def a_star_search(node):
                 index = i
 
         frontier.pop(index)
+        expanded = expanded + 1
 
 
 # busca gulosa com heuristica
@@ -151,22 +154,20 @@ def greedy_best_first_search(node):
     explored = []
     n = node
     index = -1
+    expanded = 0
     while True:
-        explored.append(n.board)
+        explored.append(n.toString())
         if n.isOk():
-            print("Solucao encontrada - ", n.solution)
+            print("Solucao encontrada - ", n.solution,
+                  "\nNos expandidos: ", expanded)
             return n
 
         for action in n.possibleActions():
             child = Node(deepcopy(n.board), n.empty, n.solution + 1)
             child.switch(action)
             child.last = n
-            if child.board not in explored:
+            if child.toString() not in explored:
                 frontier.append(child)
-
-            if child.isOk():
-                print("solucao encontrada - ", child.solution)
-                return child
 
         lowest = -1
         for i in range(len(frontier)):
@@ -179,16 +180,19 @@ def greedy_best_first_search(node):
                 index = i
 
         frontier.pop(index)
+        expanded = expanded + 1
 
 
 # busca hill climbing
 def hill_climbing_search(node):
     explored = []
     node.cost = node.numberOfWrongPieces()
+    expanded = 0
     while True:
-        explored.append(node.board)
+        explored.append(node.toString())
         if node.isOk():
-            print("Solucao encontrada", node.solution)
+            print("Solucao encontrada", node.solution,
+                  "\nNos expandidos: ", expanded)
             return node
 
         frontier = []
@@ -200,7 +204,7 @@ def hill_climbing_search(node):
             child.last = node
             child.cost = child.numberOfWrongPieces()
 
-            if child.board not in explored:
+            if child.toString() not in explored:
                 frontier.append(child)
                 if child.cost <= lowest:
                     lowest = child.cost
@@ -220,14 +224,7 @@ def hill_climbing_search(node):
             return None
 
         node = newnode
-
-
-# checa se o elemento ja esta contido na lista
-def alreadyContains(list, node):
-    for element in list:
-        if element.equals(node):
-            return True
-    return False
+        expanded = expanded + 1
 
 
 # inicializa o jogo e cria o tabuleiro inicial

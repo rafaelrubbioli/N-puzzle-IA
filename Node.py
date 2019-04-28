@@ -13,11 +13,14 @@ class Node:
         self.board[piece[0]][piece[1]] = 0
         self.empty = piece
 
-    # checa se e igual
-    def equals(self, node):
-        if self.board == node.board:
-            return True
-        return False
+    # transforma o tabuleiro em string para o explored
+    def toString(self):
+        boardString = ""
+        for line in self.board:
+            for item in line:
+                boardString = boardString + str(item)
+
+        return boardString
 
     # imprime o tabuleiro na tela
     def show(self):
@@ -114,7 +117,8 @@ class Node:
         return wrongPieces
 
     # heuristica para calcular quantos passos de distancia cada peca esta
-    def stepsToRightPlace(self):
+    def manhattanDistance(self):
+        goal = [[1,2,3],[4,5,6],[7,8,9]]
         steps = 0
         for i in range(self.size):
             for j in range(self.size):
