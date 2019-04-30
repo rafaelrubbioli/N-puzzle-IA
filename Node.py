@@ -1,6 +1,7 @@
 class Node:
     def __init__(self, board, empty, solution):
         self.board = board
+        self.string = self.toString()
         self.empty = empty
         self.solution = solution
         self.last = None
@@ -12,6 +13,7 @@ class Node:
         self.board[self.empty[0]][self.empty[1]] = self.board[piece[0]][piece[1]]
         self.board[piece[0]][piece[1]] = 0
         self.empty = piece
+        self.string = self.toString()
 
     # transforma o tabuleiro em string para o explored
     def toString(self):
@@ -30,17 +32,23 @@ class Node:
 
     # verifica se o jogo ja terminou
     def isOk(self):
-        expected = 1
-        for line in self.board:
-            for item in line:
-                if expected == 9:
-                    if item != 0:
-                        return False
-                    else:
-                        return True
-                if item != expected:
-                    return False
-                expected = expected + 1
+        if self.toString() == "123456780":
+            return True
+        else:
+            return False
+
+    # def isok(self):
+    #     expected = 1
+    #     for line in self.board:
+    #         for item in line:
+    #             if expected == 9:
+    #                 if item != 0:
+    #                     return False
+    #                 else:
+    #                     return True
+    #             if item != expected:
+    #                 return False
+    #             expected = expected + 1
 
     # busca quais sao as opcoes de movimento
     def possibleActions(self):
@@ -104,23 +112,21 @@ class Node:
     # heuristica para calcular quantas casas estao erradas
     def numberOfWrongPieces(self):
         wrongPieces = 0
-        expected = 1
-        for line in self.board:
-            for item in line:
-                if expected == 9:
-                    if item != 0:
-                        wrongPieces = wrongPieces + 1
-                elif item != expected:
+        for i, item in enumerate(self.toString()):
+            if i == 8:
+                if item != "0":
                     wrongPieces = wrongPieces + 1
-                expected = expected + 1
+            elif item != str(i+1):
+                wrongPieces = wrongPieces + 1
 
         return wrongPieces
 
+
     # heuristica para calcular quantos passos de distancia cada peca esta
     def manhattanDistance(self):
-        goal = [[1,2,3],[4,5,6],[7,8,9]]
-        steps = 0
-        for i in range(self.size):
-            for j in range(self.size):
-                pass
-
+        mandist = 0
+        for i, item in enumerate(self.toString()):
+            mandist = mandist + abs(int(i / self.size) - int(int(item) / self.size)) + \
+                      abs(i % self.size - int(item) % self.size)
+        print(mandist)
+        return mandist

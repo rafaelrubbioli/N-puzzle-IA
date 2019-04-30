@@ -15,7 +15,7 @@ def breadth_first_search(node):
 
         node = frontier.pop(0)
         expanded = expanded + 1
-        explored.append(node.toString())
+        explored.append(node.string)
         possibleActions = node.possibleActions()
 
         for action in possibleActions:
@@ -28,7 +28,7 @@ def breadth_first_search(node):
                       "\nNos expandidos: ", expanded)
                 return True
 
-            if child.toString() not in explored and child not in frontier:
+            if child.string not in explored and child not in frontier:
                 child.solution = child.solution + 1
                 frontier.append(child)
 
@@ -93,7 +93,7 @@ def uniform_cost_search(node):
 
         node = frontier.pop(position)
         expanded = expanded + 1
-        explored.append(node.toString())
+        explored.append(node.string)
         possibleActions = node.possibleActions()
 
         for action in possibleActions:
@@ -106,7 +106,7 @@ def uniform_cost_search(node):
                       "\nNos expandidos: ", expanded)
                 return True
 
-            if child.toString() not in explored and child not in frontier:
+            if child.string not in explored and child not in frontier:
                 child.solution = child.solution + 1
                 frontier.append(child)
 
@@ -119,7 +119,7 @@ def a_star_search(node):
     index = -1
     expanded = 0
     while True:
-        explored.append(n.toString())
+        explored.append(n.string)
         if n.isOk():
             print("Solucao encontrada - ", n.solution,
                   "\nNos expandidos: ", expanded)
@@ -129,17 +129,17 @@ def a_star_search(node):
             child = Node(deepcopy(n.board), n.empty, n.solution + 1)
             child.switch(action)
             child.last = n
-            if child.toString() not in explored:
+            if child.string not in explored:
                 frontier.append(child)
 
         lowest = -1
         for i in range(len(frontier)):
             if frontier[i].cost == -1:
-                frontier[i].cost = frontier[i].numberOfWrongPieces()
+                frontier[i].cost = frontier[i].manhattanDistance()
             else:
-                frontier[i].cost = frontier[i].numberOfWrongPieces() + frontier[i].cost
+                frontier[i].cost = frontier[i].manhattanDistance() + frontier[i].cost
 
-            if (lowest == -1 or frontier[i].cost <= lowest) and frontier[i].board not in explored:
+            if (lowest == -1 or frontier[i].cost <= lowest) and frontier[i].string not in explored:
                 lowest = frontier[i].cost
                 n = frontier[i]
                 index = i
@@ -156,7 +156,7 @@ def greedy_best_first_search(node):
     index = -1
     expanded = 0
     while True:
-        explored.append(n.toString())
+        explored.append(n.string)
         if n.isOk():
             print("Solucao encontrada - ", n.solution,
                   "\nNos expandidos: ", expanded)
@@ -166,7 +166,7 @@ def greedy_best_first_search(node):
             child = Node(deepcopy(n.board), n.empty, n.solution + 1)
             child.switch(action)
             child.last = n
-            if child.toString() not in explored:
+            if child.string not in explored:
                 frontier.append(child)
 
         lowest = -1
@@ -174,7 +174,7 @@ def greedy_best_first_search(node):
             if frontier[i].cost == -1:
                 frontier[i].cost = frontier[i].numberOfWrongPieces()
 
-            if (lowest == -1 or frontier[i].cost <= lowest) and frontier[i].board not in explored:
+            if (lowest == -1 or frontier[i].cost <= lowest) and frontier[i].string not in explored:
                 lowest = frontier[i].cost
                 n = frontier[i]
                 index = i
@@ -189,7 +189,7 @@ def hill_climbing_search(node):
     node.cost = node.numberOfWrongPieces()
     expanded = 0
     while True:
-        explored.append(node.toString())
+        explored.append(node.string)
         if node.isOk():
             print("Solucao encontrada", node.solution,
                   "\nNos expandidos: ", expanded)
@@ -204,7 +204,7 @@ def hill_climbing_search(node):
             child.last = node
             child.cost = child.numberOfWrongPieces()
 
-            if child.toString() not in explored:
+            if child.string not in explored:
                 frontier.append(child)
                 if child.cost <= lowest:
                     lowest = child.cost
