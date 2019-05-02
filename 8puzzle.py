@@ -36,7 +36,7 @@ def breadth_first_search(node):
 # busca limitada em tamanho crescente
 def iterative_deepening_search(node):
     depth = 0
-
+    
     while True:
         result = depth_first_search(depth, node)
         if result != -1:

@@ -7,6 +7,7 @@ class Node:
         self.last = None
         self.size = len(self.board)
         self.cost = -1
+        self.n = self.size * self.size
 
     # troca as duas casas indicadas
     def switch(self, piece):
@@ -112,8 +113,8 @@ class Node:
     # heuristica para calcular quantas casas estao erradas
     def numberOfWrongPieces(self):
         wrongPieces = 0
-        for i, item in enumerate(self.toString()):
-            if i == 8:
+        for i, item in enumerate(self.string):
+            if i == self.n - 1:
                 if item != "0":
                     wrongPieces = wrongPieces + 1
             elif item != str(i+1):
@@ -125,8 +126,9 @@ class Node:
     # heuristica para calcular quantos passos de distancia cada peca esta
     def manhattanDistance(self):
         mandist = 0
-        for i, item in enumerate(self.toString()):
-            mandist = mandist + abs(int(i / self.size) - int(int(item) / self.size)) + \
-                      abs(i % self.size - int(item) % self.size)
-        print(mandist)
+        for i in range(self.size):
+            for j in range(self.size):
+                if self.board[i][j] != 0:
+                    x, y = divmod(self.board[i][j] - 1, self.size)
+                    mandist += abs(x - i) + abs(y - j)
         return mandist
