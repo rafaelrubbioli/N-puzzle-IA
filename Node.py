@@ -11,25 +11,22 @@ class Node:
 
     # troca as duas casas indicadas
     def switch(self, piece):
-        self.board[self.empty[0]][self.empty[1]] = self.board[piece[0]][piece[1]]
-        self.board[piece[0]][piece[1]] = 0
+        self.board[self.empty] = self.board[piece]
+        self.board[piece] = 0
         self.empty = piece
         self.string = self.toString()
 
     # transforma o tabuleiro em string para o explored
     def toString(self):
         boardString = ""
-        for line in self.board:
-            for item in line:
-                boardString = boardString + str(item)
+        for item in self.board:
+            boardString = boardString + str(item)
 
         return boardString
 
     # imprime o tabuleiro na tela
     def show(self):
-        for line in self.board:
-            print(line)
-        print()
+        print(self.string)
 
     # verifica se o jogo ja terminou
     def isOk(self):
@@ -38,75 +35,61 @@ class Node:
         else:
             return False
 
-    # def isok(self):
-    #     expected = 1
-    #     for line in self.board:
-    #         for item in line:
-    #             if expected == 9:
-    #                 if item != 0:
-    #                     return False
-    #                 else:
-    #                     return True
-    #             if item != expected:
-    #                 return False
-    #             expected = expected + 1
-
     # busca quais sao as opcoes de movimento
     def possibleActions(self):
         empty = self.empty
-        end = len(self.board[0]) - 1
 
         possibleActions = []
         # primeira casa da primeira coluna
-        if empty == (0,0):
-            possibleActions.append((0,1))
-            possibleActions.append((1,0))
+        if empty == 0:
+            possibleActions.append(1)
+            possibleActions.append(3)
 
         # ultima da primeira linha
-        elif empty == (0, end):
-            possibleActions.append((0, end - 1))
-            possibleActions.append((1, end))
+        elif empty == 1:
+            possibleActions.append(0)
+            possibleActions.append(2)
+            possibleActions.append(4)
 
         # primeira casa da ultima linha
-        elif empty == (end, 0):
-            possibleActions.append((end, 1))
-            possibleActions.append((end - 1, 0))
+        elif empty == 2:
+            possibleActions.append(1)
+            possibleActions.append(5)
 
         # ultima casa da ultima linha
-        elif empty == (end, end):
-            possibleActions.append((end - 1, end))
-            possibleActions.append((end, end - 1))
+        elif empty == 3:
+            possibleActions.append(0)
+            possibleActions.append(4)
+            possibleActions.append(6)
 
         # meio da primeira linha
-        elif empty[0] == 0:
-            possibleActions.append((0, empty[1] + 1))
-            possibleActions.append((0, empty[1] - 1))
-            possibleActions.append((1, empty[1]))
+        elif empty == 4:
+            possibleActions.append(1)
+            possibleActions.append(3)
+            possibleActions.append(5)
+            possibleActions.append(7)
 
         # meio da ultima linha
-        elif empty[0] == end:
-            possibleActions.append((end, empty[1] + 1))
-            possibleActions.append((end, empty[1] - 1))
-            possibleActions.append((end - 1, empty[1]))
+        elif empty == 5:
+            possibleActions.append(2)
+            possibleActions.append(4)
+            possibleActions.append(8)
 
         # meio da lateral esquerda
-        elif empty[1] == 0:
-            possibleActions.append((empty[0] + 1, 0))
-            possibleActions.append((empty[0] - 1, 0))
-            possibleActions.append((empty[0], 1))
+        elif empty == 6:
+            possibleActions.append(3)
+            possibleActions.append(7)
 
         # meio da lateral direita
-        elif empty[1] == end:
-            possibleActions.append((empty[0] + 1, end))
-            possibleActions.append((empty[0] - 1, end))
-            possibleActions.append((empty[0], end - 1))
+        elif empty == 7:
+            possibleActions.append(6)
+            possibleActions.append(4)
+            possibleActions.append(8)
 
         # meio do tabuleiro
         else:
-            possibleActions.append((empty[0] + 1, empty[1]))
-            possibleActions.append((empty[0] - 1, empty[1]))
-            possibleActions.append((empty[0], empty[1] + 1))
-            possibleActions.append((empty[0], empty[1] - 1))
+            possibleActions.append(7)
+            possibleActions.append(5)
 
         return possibleActions
 
@@ -122,13 +105,22 @@ class Node:
 
         return wrongPieces
 
-
     # heuristica para calcular quantos passos de distancia cada peca esta
     def manhattanDistance(self):
         mandist = 0
-        for i in range(self.size):
-            for j in range(self.size):
-                if self.board[i][j] != 0:
-                    x, y = divmod(self.board[i][j] - 1, self.size)
-                    mandist += abs(x - i) + abs(y - j)
+        for i, item in enumerate(self.board):
+            if item != 0:
+                x1 = int(i / 3)
+                y1 = i % 3
+                x2 = int((item -1) / 3)
+                y2 = (item -1) % 3
+                mandist = mandist + abs(x1 - x2) + abs(y1 - y2)
+
         return mandist
+
+    # mostra a solucao encontrada
+    def showSolution(self):
+        node = self
+        while node.last:
+            node.show()
+            node = node.last

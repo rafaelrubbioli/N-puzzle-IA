@@ -33,20 +33,25 @@ def breadth_first_search(node):
                 frontier.append(child)
 
 
+expanded = 0 # global para o IDS
+
+
 # busca limitada em tamanho crescente
 def iterative_deepening_search(node):
     depth = 0
-    
     while True:
         result = depth_first_search(depth, node)
         if result != -1:
-            print("Solucao encontrada - ", result)
+            print("Solucao encontrada - ", result,
+                  "\nNos expandidos ", expanded)
             return True
         depth = depth + 1
 
 
 # busca em profundidade limitada
 def depth_first_search(limit, node):
+    global expanded
+    expanded = expanded + 1
     if node.isOk():
         return node.solution
 
@@ -251,7 +256,13 @@ def initialize():
         n = input("Numero do tabuleiro: ")
         board, empty = testBoards.get(int(n))
 
-    node = Node(board, empty, 0)
+    list = []
+    for line in board:
+        for item in line:
+            list.append(item)
+
+    slot= 3*empty[0] + empty[1]
+    node = Node(list, slot, 0)
     print("Tabuleiro: ")
     node.show()
     return node
@@ -288,7 +299,11 @@ def main():
             greedy_best_first_search(node)
         elif tipo == 6:
             print("Comecando o hill climbing ...")
-            hill_climbing_search(node)
+            sol = hill_climbing_search(node)
+            if sol:
+                print("Solucao encontrada:")
+                sol.showSolution()
+
         end = time.time()
         print("Execucao em - ", end-start)
 
