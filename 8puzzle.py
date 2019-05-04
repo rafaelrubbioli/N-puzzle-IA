@@ -5,7 +5,7 @@ import testBoards
 
 # busca em largura
 def breadth_first_search(node):
-    frontier = [node]
+    frontier = []
     explored = []
     expanded = 0
     while True:

@@ -5,9 +5,9 @@ class Node:
         self.empty = empty
         self.solution = solution
         self.last = None
-        self.size = len(self.board)
+        self.size = 3
         self.cost = -1
-        self.n = self.size * self.size
+        self.n = 9
 
     # troca as duas casas indicadas
     def switch(self, piece):
@@ -18,9 +18,7 @@ class Node:
 
     # transforma o tabuleiro em string para o explored
     def toString(self):
-        boardString = ""
-        for item in self.board:
-            boardString = boardString + str(item)
+        boardString = str(self.board)
 
         return boardString
 
@@ -30,7 +28,7 @@ class Node:
 
     # verifica se o jogo ja terminou
     def isOk(self):
-        if self.toString() == "123456780":
+        if self.string == "[1, 2, 3, 4, 5, 6, 7, 8, 0]":
             return True
         else:
             return False
