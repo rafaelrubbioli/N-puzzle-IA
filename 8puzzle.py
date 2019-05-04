@@ -5,7 +5,9 @@ import testBoards
 
 # busca em largura
 def breadth_first_search(node):
-    frontier = []
+    frontier = [node.string]
+    frontierdict = {}
+    frontierdict[node.string] = node
     explored = []
     expanded = 0
     while True:
@@ -13,7 +15,9 @@ def breadth_first_search(node):
             print("Nao encontrou resultado")
             return False
 
-        node = frontier.pop(0)
+        nodestring = frontier.pop(0)
+        node = frontierdict[nodestring]
+        del frontierdict[node.string]
         expanded = expanded + 1
         explored.append(node.string)
         possibleActions = node.possibleActions()
@@ -22,18 +26,15 @@ def breadth_first_search(node):
             child = Node(deepcopy(node.board), node.empty, node.solution)
             child.switch(action)
             child.last = node
-
             if child.isOk():
                 print("Solucao encontrada: ", child.solution + 1,
                       "\nNos expandidos: ", expanded)
                 return True
 
-            if child.string not in explored and child not in frontier:
+            if child.string not in explored and child.string not in frontier:
                 child.solution = child.solution + 1
-                frontier.append(child)
-
-
-expanded = 0 # global para o IDS
+                frontier.append(child.string)
+                frontierdict[child.string] = child
 
 
 # busca limitada em tamanho crescente
@@ -43,9 +44,13 @@ def iterative_deepening_search(node):
         result = depth_first_search(depth, node)
         if result != -1:
             print("Solucao encontrada - ", result,
-                  "\nNos expandidos ", expanded)
+                  "\nNos expandidos ", expanded,
+                  "\nNo limite ", depth)
             return True
         depth = depth + 1
+
+
+expanded = 0 # global para o IDS
 
 
 # busca em profundidade limitada
@@ -64,7 +69,6 @@ def depth_first_search(limit, node):
         child = Node(deepcopy(node.board), node.empty, node.solution + 1)
         child.switch(action)
         child.last = node
-
         result = depth_first_search(limit - 1, child)
         if result == -1:
             cutoff_occurred = True
@@ -81,7 +85,9 @@ def depth_first_search(limit, node):
 
 # busca de custo uniforme
 def uniform_cost_search(node):
-    frontier = [node]
+    frontier = [node.string]
+    frontierdict = {}
+    frontierdict[node.string] = node
     explored = []
     expanded = 0
     while True:
@@ -92,11 +98,14 @@ def uniform_cost_search(node):
         lowestCost = -1
         position = -1
         for i in range(len(frontier)):
-            if lowestCost == -1 or frontier[i].solution < lowestCost:
-                lowestCost = frontier[i].solution
+            sol = frontierdict[frontier[i]].solution
+            if lowestCost == -1 or sol < lowestCost:
+                lowestCost = sol
                 position = i
 
-        node = frontier.pop(position)
+        nodestring = frontier.pop(position)
+        node = frontierdict[nodestring]
+        del frontierdict[node.string]
         expanded = expanded + 1
         explored.append(node.string)
         possibleActions = node.possibleActions()
@@ -113,7 +122,8 @@ def uniform_cost_search(node):
 
             if child.string not in explored and child not in frontier:
                 child.solution = child.solution + 1
-                frontier.append(child)
+                frontier.append(child.string)
+                frontierdict[child.string] = child
 
 
 # busca A*
@@ -134,15 +144,14 @@ def a_star_search(node):
             child = Node(deepcopy(n.board), n.empty, n.solution + 1)
             child.switch(action)
             child.last = n
+            child.depth = n.depth + 1
             if child.string not in explored:
                 frontier.append(child)
 
         lowest = -1
         for i in range(len(frontier)):
             if frontier[i].cost == -1:
-                frontier[i].cost = frontier[i].manhattanDistance()
-            else:
-                frontier[i].cost = frontier[i].manhattanDistance() + frontier[i].cost
+                frontier[i].cost = frontier[i].manhattanDistance() + frontier[i].depth
 
             if (lowest == -1 or frontier[i].cost <= lowest) and frontier[i].string not in explored:
                 lowest = frontier[i].cost

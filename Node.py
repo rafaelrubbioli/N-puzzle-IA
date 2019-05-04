@@ -8,6 +8,7 @@ class Node:
         self.size = 3
         self.cost = -1
         self.n = 9
+        self.depth = 0
 
     # troca as duas casas indicadas
     def switch(self, piece):
@@ -37,59 +38,33 @@ class Node:
     def possibleActions(self):
         empty = self.empty
 
-        possibleActions = []
-        # primeira casa da primeira coluna
         if empty == 0:
-            possibleActions.append(1)
-            possibleActions.append(3)
+            return 1, 3
 
-        # ultima da primeira linha
         elif empty == 1:
-            possibleActions.append(0)
-            possibleActions.append(2)
-            possibleActions.append(4)
+            return 0, 2, 4
 
-        # primeira casa da ultima linha
         elif empty == 2:
-            possibleActions.append(1)
-            possibleActions.append(5)
+            return 1, 5
 
-        # ultima casa da ultima linha
         elif empty == 3:
-            possibleActions.append(0)
-            possibleActions.append(4)
-            possibleActions.append(6)
+            return 0, 4, 6
 
-        # meio da primeira linha
         elif empty == 4:
-            possibleActions.append(1)
-            possibleActions.append(3)
-            possibleActions.append(5)
-            possibleActions.append(7)
+            return 1, 3, 5, 7
 
-        # meio da ultima linha
         elif empty == 5:
-            possibleActions.append(2)
-            possibleActions.append(4)
-            possibleActions.append(8)
+            return 2, 4, 8
 
-        # meio da lateral esquerda
         elif empty == 6:
-            possibleActions.append(3)
-            possibleActions.append(7)
+            return 3, 7
 
-        # meio da lateral direita
         elif empty == 7:
-            possibleActions.append(6)
-            possibleActions.append(4)
-            possibleActions.append(8)
+            return 6, 4, 8
 
-        # meio do tabuleiro
         else:
-            possibleActions.append(7)
-            possibleActions.append(5)
+            return 7, 5
 
-        return possibleActions
 
     # heuristica para calcular quantas casas estao erradas
     def numberOfWrongPieces(self):
