@@ -8,7 +8,7 @@ def breadth_first_search(node):
     frontier = [node.string]
     frontierdict = {}
     frontierdict[node.string] = node
-    explored = []
+    explored = set()
     expanded = 0
     while True:
         if len(frontier) == 0:
@@ -19,16 +19,19 @@ def breadth_first_search(node):
         node = frontierdict[nodestring]
         del frontierdict[node.string]
         expanded = expanded + 1
-        explored.append(node.string)
+        explored.add(node.string)
         possibleActions = node.possibleActions()
 
         for action in possibleActions:
             child = Node(deepcopy(node.board), node.empty, node.solution)
             child.switch(action)
-            child.last = node
+            ## DESCOMENTAR PARA VER SOLUCAO
+            #child.last = node
             if child.isOk():
                 print("Solucao encontrada: ", child.solution + 1,
                       "\nNos expandidos: ", expanded)
+                ## DESCOMENTAR PARA VER SOLUCAO
+                #child.showSolution()
                 return True
 
             if child.string not in explored and child.string not in frontier:
@@ -68,7 +71,7 @@ def depth_first_search(limit, node):
     for action in actions:
         child = Node(deepcopy(node.board), node.empty, node.solution + 1)
         child.switch(action)
-        child.last = node
+        #child.last = node
         result = depth_first_search(limit - 1, child)
         if result == -1:
             cutoff_occurred = True
@@ -88,7 +91,7 @@ def uniform_cost_search(node):
     frontier = [node.string]
     frontierdict = {}
     frontierdict[node.string] = node
-    explored = []
+    explored = set()
     expanded = 0
     while True:
         if len(frontier) == 0:
@@ -107,20 +110,23 @@ def uniform_cost_search(node):
         node = frontierdict[nodestring]
         del frontierdict[node.string]
         expanded = expanded + 1
-        explored.append(node.string)
+        explored.add(node.string)
         possibleActions = node.possibleActions()
 
         for action in possibleActions:
             child = Node(deepcopy(node.board), node.empty, node.solution)
             child.switch(action)
-            child.last = node
+            ## DESCOMENTAR SE QUISER VER A SOLUCAO
+            #child.last = node
 
             if child.isOk():
                 print("Solucao encontrada: ", child.solution + 1,
                       "\nNos expandidos: ", expanded)
+                ## DESCOMENTAR SE QUISER VER A SOLUCAO
+                #child.showSolution()
                 return True
 
-            if child.string not in explored and child not in frontier:
+            if child.string not in explored and child.string not in frontier:
                 child.solution = child.solution + 1
                 frontier.append(child.string)
                 frontierdict[child.string] = child
@@ -129,20 +135,23 @@ def uniform_cost_search(node):
 # busca A*
 def a_star_search(node):
     frontier = []
-    explored = []
+    explored = set()
     n = node
     index = -1
     expanded = 0
     while True:
-        explored.append(n.string)
+        explored.add(n.string)
         if n.isOk():
             print("Solucao encontrada - ", n.solution,
                   "\nNos expandidos: ", expanded)
+            ## DESCOMENTAR SE QUISER VER A SOLUCAO
+            n.showSolution()
             return n
 
         for action in n.possibleActions():
             child = Node(deepcopy(n.board), n.empty, n.solution + 1)
             child.switch(action)
+            ## DESCOMENTAR SE QUISER VER A SOLUCAO
             child.last = n
             child.depth = n.depth + 1
             if child.string not in explored:
@@ -165,15 +174,17 @@ def a_star_search(node):
 # busca gulosa com heuristica
 def greedy_best_first_search(node):
     frontier = []
-    explored = []
+    explored = set()
     n = node
     index = -1
     expanded = 0
     while True:
-        explored.append(n.string)
+        explored.add(n.string)
         if n.isOk():
             print("Solucao encontrada - ", n.solution,
                   "\nNos expandidos: ", expanded)
+            ## DESCOMENTAR SE QUISER VER A SOLUCAO
+            n.showSolution()
             return n
 
         for action in n.possibleActions():
@@ -276,8 +287,129 @@ def initialize():
     node.show()
     return node
 
+# teste
+def test():
+    ## TEST GREEDY
+    # for i in range(31):
+    #     board, empty = testBoards.get(int(i+1))
+    #     list = []
+    #     for line in board:
+    #         for item in line:
+    #             list.append(item)
+    #
+    #     slot = 3 * empty[0] + empty[1]
+    #     node = Node(list, slot, 0)
+    #
+    #     start = time.time()
+    #     greedy_best_first_search(node)
+    #     end = time.time()
+    #     print("Execucao em - ", end - start)
+    #
+    ## TEST A*
+    # for i in range(31):
+    #     board, empty = testBoards.get(int(i+1))
+    #     list = []
+    #     for line in board:
+    #         for item in line:
+    #             list.append(item)
+    #
+    #     slot = 3 * empty[0] + empty[1]
+    #     node = Node(list, slot, 0)
+    #
+    #     start = time.time()
+    #     a_star_search(node)
+    #     end = time.time()
+    #     print("Execucao em - ", end - start)
+    #
+    ## TEST HILL CLIMBING
+    # for i in range(31):
+    #     board, empty = testBoards.get(int(i + 1))
+    #     list = []
+    #     for line in board:
+    #         for item in line:
+    #             list.append(item)
+    #
+    #     slot = 3 * empty[0] + empty[1]
+    #     node = Node(list, slot, 0)
+    #
+    #     start = time.time()
+    #     sol = hill_climbing_search(node)
+    #     if sol:
+    #         print("Solucao encontrada:")
+    #         sol.showSolution()
+    #         sol.showSolution()
+    #     end = time.time()
+    #     print("Execucao em - ", end - start)
+    #
+    ## TEST BFS
+    # for i in range(31):
+    #     board, empty = testBoards.get(int(i+1))
+    #     list = []
+    #     for line in board:
+    #         for item in line:
+    #             list.append(item)
+    #
+    #     slot = 3 * empty[0] + empty[1]
+    #     node = Node(list, slot, 0)
+    #
+    #     start = time.time()
+    #     breadth_first_search(node)
+    #     end = time.time()
+    #     print("Execucao em - ", end - start)
+    #
+    ## TEST UNIFORM COST
+    # for i in range(31):
+    #     board, empty = testBoards.get(int(i+1))
+    #     list = []
+    #     for line in board:
+    #         for item in line:
+    #             list.append(item)
+    #
+    #     slot = 3 * empty[0] + empty[1]
+    #     node = Node(list, slot, 0)
+    #
+    #     start = time.time()
+    #     uniform_cost_search(node)
+    #     end = time.time()
+    #     print("Execucao em - ", end - start)
+    #
+    ## TEST IDS
+    # for i in range(31):
+    #     board, empty = testBoards.get(int(i+1))
+    #     list = []
+    #     for line in board:
+    #         for item in line:
+    #             list.append(item)
+    #
+    #     slot = 3 * empty[0] + empty[1]
+    #     node = Node(list, slot, 0)
+    #
+    #     start = time.time()
+    #     iterative_deepening_search(node)
+    #     end = time.time()
+    #     print("Execucao em - ", end - start)
+
+    # TEST 31
+    board, empty = testBoards.get(31)
+    list = []
+    for line in board:
+        for item in line:
+            list.append(item)
+
+    slot = 3 * empty[0] + empty[1]
+    node = Node(list, slot, 0)
+    ## BFS
+    #breadth_first_search(node)
+    ##UNIFORM COST
+    #uniform_cost_search(node)
+    ## GREEDY
+    #greedy_best_first_search(node)
+    #A*
+    #a_star_search(node)
 
 def main():
+    test()
+    return
     node = initialize()
 
     tipo = input(

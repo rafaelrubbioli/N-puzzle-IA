@@ -5,9 +5,7 @@ class Node:
         self.empty = empty
         self.solution = solution
         self.last = None
-        self.size = 3
         self.cost = -1
-        self.n = 9
         self.depth = 0
 
     # troca as duas casas indicadas
@@ -19,7 +17,9 @@ class Node:
 
     # transforma o tabuleiro em string para o explored
     def toString(self):
-        boardString = str(self.board)
+        boardString = ""
+        for item in self.board:
+            boardString = boardString + str(item)
 
         return boardString
 
@@ -29,7 +29,7 @@ class Node:
 
     # verifica se o jogo ja terminou
     def isOk(self):
-        if self.string == "[1, 2, 3, 4, 5, 6, 7, 8, 0]":
+        if self.string == "[1, 2, 3, 4, 5, 6, 7, 8, 0]" or self.string == "123456780":
             return True
         else:
             return False
@@ -70,7 +70,7 @@ class Node:
     def numberOfWrongPieces(self):
         wrongPieces = 0
         for i, item in enumerate(self.string):
-            if i == self.n - 1:
+            if i == 8:
                 if item != "0":
                     wrongPieces = wrongPieces + 1
             elif item != str(i+1):
