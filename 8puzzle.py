@@ -145,7 +145,7 @@ def a_star_search(node):
             print("Solucao encontrada - ", n.solution,
                   "\nNos expandidos: ", expanded)
             ## DESCOMENTAR SE QUISER VER A SOLUCAO
-            n.showSolution()
+            #n.showSolution()
             return n
 
         for action in n.possibleActions():
@@ -184,7 +184,7 @@ def greedy_best_first_search(node):
             print("Solucao encontrada - ", n.solution,
                   "\nNos expandidos: ", expanded)
             ## DESCOMENTAR SE QUISER VER A SOLUCAO
-            n.showSolution()
+            #n.showSolution()
             return n
 
         for action in n.possibleActions():
@@ -389,27 +389,12 @@ def test():
     #     end = time.time()
     #     print("Execucao em - ", end - start)
 
-    # TEST 31
-    board, empty = testBoards.get(31)
-    list = []
-    for line in board:
-        for item in line:
-            list.append(item)
-
-    slot = 3 * empty[0] + empty[1]
-    node = Node(list, slot, 0)
-    ## BFS
-    #breadth_first_search(node)
-    ##UNIFORM COST
-    #uniform_cost_search(node)
-    ## GREEDY
-    #greedy_best_first_search(node)
-    #A*
-    #a_star_search(node)
+    pass
 
 def main():
-    test()
-    return
+    ## DESCOMENTAR PARA USAR A FUNCAO DE TESTE
+    # test()
+    # return
     node = initialize()
 
     tipo = input(
